@@ -44,6 +44,14 @@ public class MovieDataAccessService implements MovieDao {
     }
 
     @Override
+    public Optional<Movie> selectMovieByName(String name) {
+        var sql = "SELECT id, name, release_date FROM movie WHERE name = ?";
+        return jdbcTemplate.query(sql, new MovieRowMapper(), name)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
     public int updateMovie(int id, Movie movie) {
         var sql = "UPDATE movie SET name = ?, release_date = ? WHERE id =?";
         return jdbcTemplate.update(sql, movie.name(), movie.releaseDate(), id);
