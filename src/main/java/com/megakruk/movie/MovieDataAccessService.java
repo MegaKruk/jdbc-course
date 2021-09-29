@@ -1,9 +1,10 @@
 package com.megakruk.movie;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +31,22 @@ public class MovieDataAccessService implements MovieDao {
 
     @Override
     public int deleteMovie(int id) {
-        throw new UnsupportedOperationException("not implemented");
-
+        var sql = "DELETE FROM movie WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Optional<Movie> selectMovieById(int id) {
-        throw new UnsupportedOperationException("not implemented");
+        var sql = "SELECT id, name, release_date FROM movie WHERE id = ?";
+        return jdbcTemplate.query(sql, new MovieRowMapper(), id)
+                .stream()
+                .findFirst();
     }
-    
+
+    @Override
+    public int updateMovie(int id, Movie movie) {
+        var sql = "UPDATE movie SET name = ?, release_date = ? WHERE id =?";
+        return jdbcTemplate.update(sql, movie.name(), movie.releaseDate(), id);
+    }
+
 }

@@ -34,5 +34,8 @@ public class MovieController {
         movieService.deleteMovie(id);
     }
 
-   // TODO: Update movie
+   @PutMapping("{id}")
+    public  void  updateMovie(@PathVariable(value = "id") int id, @RequestBody Movie movie) {
+        movieService.updateMovie(id, movie);
+   }
 }
